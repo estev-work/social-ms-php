@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
+//TODO Доработать, репозиторий сырой, возможно сделать классы мэппинга aggregate на entities
 class DoctrinePostRepository
 {
     private EntityManagerInterface $entityManager;
