@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
+//TODO Доработать, репозиторий сырой, возможно сделать классы мэппинга aggregate на entities
 class DoctrinePostRepository
 {
     private EntityManagerInterface $entityManager;
@@ -22,13 +23,10 @@ class DoctrinePostRepository
      */
     public function savePost(PostAggregate $postAggregate): PostAggregate
     {
-        // Маппинг из PostAggregate в PostEntity
         $postEntity = $this->aggregateToEntity($postAggregate);
 
         $this->entityManager->persist($postEntity);
         $this->entityManager->flush();
-
-        // Возвращаем обновленный агрегат, возможно с новым ID или другими полями, установленными после сохранения
         return $this->entityToAggregate($postEntity);
     }
 
