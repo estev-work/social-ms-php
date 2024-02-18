@@ -42,6 +42,7 @@ class PostAggregate implements AggregateRootInterface
     ) {
         $this->id = $id;
         $this->title = $title;
+        $this->content = $content;
         $this->author = $author;
         $this->published = $published;
         $this->createdAt = $createdAt;
