@@ -2,6 +2,8 @@
 
 namespace App\Post\Domain\ValueObjects;
 
+use DateTimeInterface;
+
 final class CreatedDate
 {
 
@@ -19,7 +21,7 @@ final class CreatedDate
 
     public function toISO(): string
     {
-        return $this->value->format(DATE_ATOM);
+        return $this->value->format(DateTimeInterface::ATOM);
     }
 
     public function setValue(\DateTimeImmutable $value): void
