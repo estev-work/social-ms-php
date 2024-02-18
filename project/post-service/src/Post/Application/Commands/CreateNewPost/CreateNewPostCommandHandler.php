@@ -14,6 +14,7 @@ class CreateNewPostCommandHandler extends AbstractCommandHandler
     {
         $this->aggregate = PostAggregate::make(
             title: $command->getTitle(),
+            content: $command->getContent(),
             authorId: $command->getAuthorId(),
             isPublished: $command->getIsPublished()
         );

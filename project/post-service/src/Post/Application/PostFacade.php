@@ -38,10 +38,9 @@ class PostFacade
     }
 
     #region Commands
-    public function createNewPost(string $title, string $authorId, $isPublished): PostAggregate
+    public function createNewPost(string $title, string $content, string $authorId, $isPublished): PostAggregate
     {
-        $command = new CreateNewPostCommand($title, $authorId, $isPublished);
-        $command = new CreateNewPostCommand($title, $authorId, $isPublished);
+        $command = new CreateNewPostCommand($title, $content, $authorId, $isPublished);
         return $this->commandBus->handle($command);
     }
 

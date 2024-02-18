@@ -1,75 +1,49 @@
-version: '3.9'
+version: '3.7'
+
 networks:
-  social-ms:
+  social:
     driver: bridge
 
 services:
   nginx:
-    build:
-      context: ./nginx/
-      args:
-        http_protocol: ${HTTP_PROTOCOL}
-        server_name: ${HOSTNAME}
-    restart: always
-    environment:
-      SERVICE_TAGS: ${TAG}
-    links:
-      - php
-    ports:
-      - '${API_HTTP_PORT}:80'
+    image: nginx:1.25.1-alpine3.17
     volumes:
-      - ../project/post-service:/var/www/
-      - ./nginx/logs:/var/log/nginx/
-      - ./nginx/nginx_main.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/certs:/etc/nginx/certs
+    ports:
+      - "${POST_HTTP_PORT}:80"
     depends_on:
-      - php
+      - post-service
     networks:
-      - social-ms
+      - social
 
   mysql:
-    image: mysql:8.0
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "${MYSQL_HOST_PORT}:${MYSQL_DOCKER_CONTAINER_PORT}"
-    volumes:
-      - ./volumes/mysql:/var/lib/mysql
+    image: mysql:8
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      SERVICE_TAGS: ${TAG}
-      SERVICE_NAME: mysql
+    volumes:
+      - db-data:/var/lib/mysql
     networks:
-      - social-ms
+      - social
 
   redis:
-    image: redis:7.2-alpine3.19
-    restart: always
-    environment:
-      SERVICE_TAGS: ${TAG}
-    ports:
-      - ${REDIS_PORT}:6379
+    image: redis:6.0
     networks:
-      - social-ms
+      - social
 
-  php:
+  post-service:
     build:
-      context: ./php/
-    restart: always
-    environment:
-      SERVICE_TAGS: post-service
+      context: ../project/post-service
+      dockerfile: Dockerfile
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    ports:
-      - '${POST_SERVICE_PORT_PHP}:9000'
     volumes:
       - ../project/post-service:/var/www
-      - ./php/pool.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
-      - ./php/supervisor/conf.d:/etc/supervisor/conf.d
-      - ./php/cronlogs/cron.log:/var/log/cron.log
-    depends_on:
-      - mysql
     networks:
-      - social-ms
+      - social
+
+volumes:
+  db-data:

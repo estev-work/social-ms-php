@@ -6,8 +6,12 @@ use App\Post\Application\Commands\AbstractCommand;
 
 class CreateNewPostCommand extends AbstractCommand
 {
-    public function __construct(protected string $title, protected string $authorId, protected string $isPublished)
-    {
+    public function __construct(
+        protected string $title,
+        protected string $content,
+        protected string $authorId,
+        protected string $isPublished
+    ) {
     }
 
     public function getTitle(): string
@@ -24,4 +28,10 @@ class CreateNewPostCommand extends AbstractCommand
     {
         return $this->isPublished;
     }
+
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+    
 }

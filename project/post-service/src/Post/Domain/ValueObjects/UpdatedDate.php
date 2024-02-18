@@ -2,6 +2,8 @@
 
 namespace App\Post\Domain\ValueObjects;
 
+use DateTimeInterface;
+
 final class UpdatedDate
 {
     public function __construct(private ?\DateTimeImmutable $value = null)
@@ -15,10 +17,7 @@ final class UpdatedDate
 
     public function toISO(): ?string
     {
-        if (!$this->value) {
-            return null;
-        }
-        return $this->value->format(DATE_ISO8601_EXPANDED);
+        return $this->value?->format(DateTimeInterface::ATOM);
     }
 
     public function setValue(\DateTimeImmutable $value): void
