@@ -3,6 +3,7 @@
 namespace App\Post\Domain;
 
 use App\Base\Interfaces\AggregateRootInterface;
+use App\Post\Domain\Exceptions\DomainValidationException;
 use App\Post\Domain\ValueObjects\AuthorId;
 use App\Post\Domain\ValueObjects\Content;
 use App\Post\Domain\ValueObjects\CreatedDate;
@@ -11,6 +12,7 @@ use App\Post\Domain\ValueObjects\PublishedStatus;
 use App\Post\Domain\ValueObjects\Title;
 use App\Post\Domain\ValueObjects\UpdatedDate;
 use DateTimeImmutable;
+use Exception;
 
 class PostAggregate implements AggregateRootInterface
 {
@@ -89,6 +91,9 @@ class PostAggregate implements AggregateRootInterface
         return $this->id->getValue();
     }
 
+    /**
+     * @throws DomainValidationException|Exception
+     */
     public function changeTitle(string $newTitle): self
     {
         $this->title->change($newTitle);
