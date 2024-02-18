@@ -6,11 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateNewPostRequest
 {
-    public function __invoke()
-    {
-        dd($this);
-    }
-
     public function __construct(
         #[Assert\NotBlank]
         #[Assert\Length(min: 10, max: 500)]
