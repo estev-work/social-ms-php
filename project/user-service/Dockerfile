@@ -1,15 +1,22 @@
+FROM ghcr.io/roadrunner-server/roadrunner:2023.3.11 AS roadrunner
 FROM php:8.3-fpm-alpine3.17
+
+COPY --from=roadrunner /usr/bin/rr /usr/local/bin/rr
 
 RUN apk update && apk add --no-cache \
     libzip-dev \
     zip \
+    gzip \
     git \
     $PHPIZE_DEPS \
-    wget
-
+    wget \
+    linux-headers
 
 # PHP pdo ext
 RUN docker-php-ext-install pdo_mysql zip
+# sockets
+RUN docker-php-ext-install sockets
+
 
 # Xdebug ext
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
@@ -32,6 +39,9 @@ RUN mkdir -p /var/log && touch /var/log/xdebug.log && chmod 777 /var/log/xdebug.
 
 WORKDIR /var/www
 
-EXPOSE 9000
+# Копирование конфигурационного файла RoadRunner в контейнер
+COPY .rr.yaml /etc/roadrunner/.rr.yaml
 
-CMD ["php-fpm"]
+EXPOSE 8080
+
+CMD ["rr", "serve"]

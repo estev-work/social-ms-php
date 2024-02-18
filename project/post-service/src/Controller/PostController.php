@@ -17,7 +17,7 @@ class PostController extends AbstractController
     {
     }
 
-    #[Route('new', name: 'new', methods: 'POST', format: 'json')]
+    #[Route('/create', name: 'new', methods: 'POST', format: 'json')]
     public function create(
         #[MapQueryString] CreateNewPostRequest $request
     ): JsonResponse {
@@ -28,6 +28,14 @@ class PostController extends AbstractController
         );
         return $this->json([
             "data" => $post->toArray()
+        ]);
+    }
+
+    #[Route('list', name: 'list', methods: 'GET', format: 'json')]
+    public function list(): JsonResponse
+    {
+        return $this->json([
+            "data" => ['test' => 'work!']
         ]);
     }
 }
