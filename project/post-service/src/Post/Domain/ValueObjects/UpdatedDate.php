@@ -8,14 +8,17 @@ final class UpdatedDate
 {
     public function __construct(private ?\DateTimeImmutable $value = null)
     {
+        if (!$value) {
+            $this->value = new \DateTimeImmutable();
+        }
     }
 
-    public function getValue(): ?\DateTimeImmutable
+    public function getValue(): \DateTimeImmutable
     {
         return $this->value;
     }
 
-    public function toISO(): ?string
+    public function toISO(): string
     {
         return $this->value?->format(DateTimeInterface::ATOM);
     }

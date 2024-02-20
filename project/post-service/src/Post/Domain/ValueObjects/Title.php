@@ -2,12 +2,11 @@
 
 namespace App\Post\Domain\ValueObjects;
 
-use App\Post\Domain\Exceptions\DomainValidationException;
+use App\Post\Domain\Exceptions\DomainTitleValidationException;
 
 final class Title
 {
     private const int MIN_LEN = 10;
-    private const string MIN_LEN_ERROR_TEXT = 'Title менее 10 символов';
 
     public function __construct(private string $title = "none")
     {
@@ -27,7 +26,7 @@ final class Title
     public function change(string $title): void
     {
         if (strlen($title) < self::MIN_LEN) {
-            throw new DomainValidationException(self::MIN_LEN_ERROR_TEXT);
+            throw new DomainTitleValidationException();
         }
         if ($title !== '') {
             $this->title = $title;

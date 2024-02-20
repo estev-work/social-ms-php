@@ -15,26 +15,24 @@ class PostFacade
 {
     private CommandBus $commandBus;
 
-    public function __construct()
-    {
-        $this->commandBus = new CommandBus();
-        $this->initializeHandlers();
+    public function __construct(
+        CommandBus $commandBus,
+        CreateNewPostCommandHandler $createNewPostHandler,
+        PublishPostCommandHandler $publishPostHandler,
+        UnpublishPostCommandHandler $unpublishPostHandler
+    ) {
+        $this->commandBus = $commandBus;
+        $this->initializeHandlers($createNewPostHandler, $publishPostHandler, $unpublishPostHandler);
     }
 
-    private function initializeHandlers(): void
-    {
-        $this->commandBus->registerHandler(
-            CreateNewPostCommand::class,
-            new CreateNewPostCommandHandler()
-        );
-        $this->commandBus->registerHandler(
-            PublishPostCommand::class,
-            new PublishPostCommandHandler()
-        );
-        $this->commandBus->registerHandler(
-            UnpublishPostCommand::class,
-            new UnpublishPostCommandHandler()
-        );
+    private function initializeHandlers(
+        CreateNewPostCommandHandler $createNewPostHandler,
+        PublishPostCommandHandler $publishPostHandler,
+        UnpublishPostCommandHandler $unpublishPostHandler
+    ): void {
+        $this->commandBus->registerHandler(CreateNewPostCommand::class, $createNewPostHandler);
+        $this->commandBus->registerHandler(PublishPostCommand::class, $publishPostHandler);
+        $this->commandBus->registerHandler(UnpublishPostCommand::class, $unpublishPostHandler);
     }
 
     #region Commands

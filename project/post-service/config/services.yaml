@@ -25,3 +25,7 @@ services:
   App\ArgumentResolver\RequestResolver:
     tags:
       - { name: 'controller.argument_value_resolver' }
+
+  App\Post\Infrastructure\Repository\DoctrinePostRepository:
+    class: App\Post\Infrastructure\Repository\DoctrinePostRepository
+    autowire: true

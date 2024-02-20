@@ -14,7 +14,7 @@ http:
   max_request_size: 512
   middleware: [ "gzip", "headers" ]
   pool:
-    num_workers: 1
+    num_workers: 4
     max_jobs: 64
     allocate_timeout: 60s
     destroy_timeout: 60s

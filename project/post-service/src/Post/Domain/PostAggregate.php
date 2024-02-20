@@ -3,7 +3,7 @@
 namespace App\Post\Domain;
 
 use App\Base\Interfaces\AggregateRootInterface;
-use App\Post\Domain\Exceptions\DomainValidationException;
+use App\Post\Domain\Exceptions\DomainTitleValidationException;
 use App\Post\Domain\ValueObjects\AuthorId;
 use App\Post\Domain\ValueObjects\Content;
 use App\Post\Domain\ValueObjects\CreatedDate;
@@ -82,7 +82,7 @@ class PostAggregate implements AggregateRootInterface
             'author' => $this->author->getValue(),
             'published' => $this->published->getValue(),
             'createdAt' => $this->createdAt->toISO(),
-            'updatedAt' => $this->updatedAt->toISO(),
+            'updatedAt' => $this->updatedAt?->toISO(),
         ];
     }
 
@@ -92,7 +92,7 @@ class PostAggregate implements AggregateRootInterface
     }
 
     /**
-     * @throws DomainValidationException|Exception
+     * @throws DomainTitleValidationException|Exception
      */
     public function changeTitle(string $newTitle): self
     {
@@ -114,14 +114,14 @@ class PostAggregate implements AggregateRootInterface
     #endregion
 
     #region GETTERS & SETTERS
-    public function getCreatedAt(): string
+    public function getCreatedAt(): CreatedDate
     {
-        return $this->createdAt->toISO();
+        return $this->createdAt;
     }
 
-    public function getUpdatedAt(): string
+    public function getUpdatedAt(): UpdatedDate
     {
-        return $this->updatedAt->toISO();
+        return $this->updatedAt;
     }
 
     public function getTitle(): string

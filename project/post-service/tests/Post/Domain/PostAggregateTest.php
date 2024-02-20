@@ -2,7 +2,7 @@
 
 namespace tests\Post\Domain;
 
-use App\Post\Domain\Exceptions\DomainValidationException;
+use App\Post\Domain\Exceptions\DomainTitleValidationException;
 use App\Post\Domain\PostAggregate;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -30,12 +30,12 @@ class PostAggregateTest extends TestCase
         $this->assertEquals($content, $post->getContent());
         $this->assertEquals($authorId, $post->getAuthor());
         $this->assertEquals($isPublished, $post->getPublished());
-        $this->assertEquals($createdAt->format(DateTimeInterface::ATOM), $post->getCreatedAt());
-        $this->assertEquals($updatedAt->format(DateTimeInterface::ATOM), $post->getUpdatedAt());
+        $this->assertEquals($createdAt->format(DateTimeInterface::ATOM), $post->getCreatedAt()->toISO());
+        $this->assertEquals($updatedAt->format(DateTimeInterface::ATOM), $post->getUpdatedAt()->toISO());
     }
 
     /**
-     * @throws DomainValidationException
+     * @throws DomainTitleValidationException
      */
     public function testChangeTitle(): void
     {
@@ -47,7 +47,7 @@ class PostAggregateTest extends TestCase
 
     public function testChangeTitleWithInvalidDataThrowsException(): void
     {
-        $this->expectException(DomainValidationException::class);
+        $this->expectException(DomainTitleValidationException::class);
         $post = $this->createSamplePost();
         $post->changeTitle(
             $this->getRandomString((new Randomizer())->getInt(0, 9))
