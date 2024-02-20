@@ -2,21 +2,21 @@
 
 namespace App\Controller;
 
-use App\Requests\AuthRequest;
+use App\Requests\GetUsersRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('auth', name: 'auth_', requirements: [])]
+#[Route('users', name: 'users_', requirements: [])]
 class AuthController extends AbstractController
 {
-    #[Route(name: 'login', methods: 'POST', format: 'json')]
-    public function login(
-        AuthRequest $request
+    #[Route(name: 'all', methods: 'GET', format: 'json')]
+    public function getAll(
+        GetUsersRequest $request
     ): JsonResponse {
         //TODO
         return $this->json([
-            "data" => ['status' => 'worked']
+            "data" => ['result' => 'worked']
         ]);
     }
 }
