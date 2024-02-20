@@ -5,11 +5,10 @@ networks:
     driver: bridge
 
 services:
-  nginx:
+  nginx-service:
     image: nginx:1.25.1-alpine3.17
     volumes:
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-      - ./nginx/certs:/etc/nginx/certs
     ports:
       - "${POST_HTTP_PORT}:80"
     depends_on:
@@ -17,19 +16,25 @@ services:
     networks:
       - social
 
-  mysql:
-    image: mysql:8
+  mysql-service:
+    image: mysql:8.0
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${MYSQL_HOST_PORT}:${MYSQL_DOCKER_CONTAINER_PORT}"
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    volumes:
-      - db-data:/var/lib/mysql
+      SERVICE_TAGS: ${TAG}
+      SERVICE_NAME: mysql
     networks:
       - social
 
-  redis:
+  redis-service:
     image: redis:6.0
     networks:
       - social
