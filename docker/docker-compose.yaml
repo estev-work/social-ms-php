@@ -46,7 +46,19 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ../project/post-service:/var/www
+      - ../project/post-service:/var/www/post
+    networks:
+      - social
+
+  user-service:
+    build:
+      context: ../project/user-service
+      dockerfile: Dockerfile
+    #    command: "composer install"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ../project/user-service:/var/www/user
     networks:
       - social
 
