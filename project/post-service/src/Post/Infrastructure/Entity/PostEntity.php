@@ -5,29 +5,64 @@ namespace App\Post\Infrastructure\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: "App\Post\Infrastructure\Repository\DoctrinePostRepository")]
+#[ORM\Entity(repositoryClass: "App\Post\Infrastructure\Repository\PostRepositoryInterface")]
 #[ORM\Table(name: "posts")]
-class PostEntity extends BaseEntity
+readonly class PostEntity
 {
+    #[ORM\Id()]
+    #[ORM\Column(type: "uuid", nullable: false)]
+    protected string $id;
+
     #[ORM\Column(name: 'title', type: "text", length: 255, nullable: false)]
-    private ?string $title;
+    protected string $title;
 
     #[ORM\Column(type: "text", nullable: false)]
-    private ?string $content;
+    protected string $content;
     #[ORM\Column(name: 'author_id', type: "string", nullable: false)]
-    private ?string $authorId;
+    protected string $authorId;
     #[ORM\Column(name: 'is_published', type: "boolean", nullable: false)]
-    private ?string $isPublished;
+    protected string $isPublished;
+
+    #[ORM\Column(name: "created_at", type: "string", nullable: false)]
+    protected string $createdAt;
+    #[ORM\Column(name: "updated_at", type: "string", nullable: false)]
+    protected string $updatedAt;
+
+    /**
+     * @param string|null $id
+     * @param string|null $title
+     * @param string|null $content
+     * @param string|null $authorId
+     * @param string|null $isPublished
+     * @param string|null $createdAt
+     * @param string $updatedAt
+     */
+    public function __construct(
+        ?string $id,
+        ?string $title,
+        ?string $content,
+        ?string $authorId,
+        ?string $isPublished,
+        ?string $createdAt,
+        string $updatedAt
+    ) {
+        $this->id = $id;
+        $this->title = $title;
+        $this->content = $content;
+        $this->authorId = $authorId;
+        $this->isPublished = $isPublished;
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $updatedAt;
+    }
+
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
 
     public function getTitle(): ?string
     {
         return $this->title;
-    }
-
-    public function setTitle(?string $title): PostEntity
-    {
-        $this->title = $title;
-        return $this;
     }
 
     public function getContent(): ?string
@@ -35,21 +70,9 @@ class PostEntity extends BaseEntity
         return $this->content;
     }
 
-    public function setContent(?string $content): PostEntity
-    {
-        $this->content = $content;
-        return $this;
-    }
-
     public function getAuthorId(): ?string
     {
         return $this->authorId;
-    }
-
-    public function setAuthorId(?string $authorId): PostEntity
-    {
-        $this->authorId = $authorId;
-        return $this;
     }
 
     public function getIsPublished(): ?string
@@ -57,9 +80,13 @@ class PostEntity extends BaseEntity
         return $this->isPublished;
     }
 
-    public function setIsPublished(?string $isPublished): PostEntity
+    public function getCreatedAt(): ?string
     {
-        $this->isPublished = $isPublished;
-        return $this;
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
     }
 }
