@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Post\Infrastructure\Repository;
+namespace App\Post\Infrastructure\Repository\Implementation;
 
 use App\Post\Domain\PostAggregate;
 use App\Post\Infrastructure\Entity\PostEntity;
+use App\Post\Infrastructure\Repository\PostRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
-//TODO Доработать, репозиторий сырой, возможно сделать классы мэппинга aggregate на entities
-class DoctrinePostRepository
+class DoctrinePostRepository implements PostRepositoryInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(protected EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -65,13 +62,15 @@ class DoctrinePostRepository
 
     private function aggregateToEntity(PostAggregate $aggregate): PostEntity
     {
-        $entity = new PostEntity();
-        $entity->setTitle($aggregate->getTitle());
-        $entity->setContent($aggregate->getContent());
-        $entity->setCreatedAt($aggregate->getCreatedAt());
-        $entity->setUpdatedAt($aggregate->getUpdatedAt());
-
-        return $entity;
+        return new PostEntity(
+            $aggregate->getId(),
+            $aggregate->getTitle(),
+            $aggregate->getContent(),
+            $aggregate->getAuthor(),
+            $aggregate->getPublished(),
+            $aggregate->getCreatedAt()->toISO(),
+            $aggregate->getUpdatedAt()->toISO(),
+        );
     }
 
     /**
