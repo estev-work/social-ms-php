@@ -38,7 +38,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Xdebug log
 RUN mkdir -p /var/log && touch /var/log/xdebug.log && chmod 777 /var/log/xdebug.log
 
-WORKDIR /var/www
+WORKDIR /var/www/post
 
 # Копирование конфигурационного файла RoadRunner в контейнер
 COPY .rr.yaml /etc/roadrunner/.rr.yaml
