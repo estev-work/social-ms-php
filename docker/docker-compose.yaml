@@ -51,7 +51,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ../project/post-service:/var/www/post
+      - ./rr/rr:/usr/local/bin/rr
+      - ../project/post-service:/var/www
+      - ../project/post-service/.rr.yaml:/etc/roadrunner/.rr.yaml
     networks:
       - social
 

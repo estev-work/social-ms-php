@@ -12,13 +12,16 @@ server:
 http:
   address: "0.0.0.0:8050"
   max_request_size: 512
-  middleware: [ "gzip", "headers" ]
+  middleware: [ "gzip", "headers", "jwt" ]
   pool:
     num_workers: 4
     max_jobs: 64
     allocate_timeout: 60s
     destroy_timeout: 60s
     pool.debug: true
+
+jwt:
+  secret: "api-secret"
 
 logs:
   level: debug
