@@ -11,6 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.0",
         "ecotone/symfony-bundle": "^1.210",
+        "predis/predis": "^2.2",
         "runtime/roadrunner-symfony-nyholm": "^0.3.1",
         "symfony/console": "7.0.*",
         "symfony/dependency-injection": "7.0.*",

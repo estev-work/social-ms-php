@@ -10,7 +10,7 @@ services:
     volumes:
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - "${POST_HTTP_PORT}:80"
+      - "${API_HTTP_PORT}:80"
     depends_on:
       - post-service
     networks:
@@ -35,7 +35,12 @@ services:
       - social
 
   redis-service:
-    image: redis:6.0
+    image: redis:7.2-rc-alpine3.18
+    restart: always
+    environment:
+      SERVICE_TAGS: ${TAG}
+    ports:
+      - ${REDIS_PORT}:6379
     networks:
       - social
 
@@ -46,19 +51,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ../project/post-service:/var/www/post
-    networks:
-      - social
-
-  user-service:
-    build:
-      context: ../project/user-service
-      dockerfile: Dockerfile
-    #    command: "composer install"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - ../project/user-service:/var/www/user
+      - ./rr/rr:/usr/local/bin/rr
+      - ../project/post-service:/var/www
+      - ../project/post-service/.rr.yaml:/etc/roadrunner/.rr.yaml
     networks:
       - social
 
