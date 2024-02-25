@@ -23,6 +23,10 @@ services:
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
 
-  App\Project\Infrastructure\Repository\DoctrinePostRepository:
+  App\Project\Infrastructure\Repository\PostRepositoryInterface:
     class: App\Project\Infrastructure\Repository\Implementation\DoctrinePostRepository
+    autowire: true
+
+  App\Project\Infrastructure\EventPublisher\EventPublisherInterface:
+    class: App\Project\Infrastructure\EventPublisher\Implementation\KafkaEventPublisher
     autowire: true

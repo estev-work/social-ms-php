@@ -6,11 +6,11 @@ use App\Project\Domain\PostAggregate;
 use App\Project\Infrastructure\Entity\PostEntity;
 use App\Project\Infrastructure\Repository\PostRepositoryInterface;
 use DateTimeImmutable;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryProxy;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 
-class DoctrinePostRepository extends ServiceEntityRepository implements PostRepositoryInterface
+class DoctrinePostRepository extends ServiceEntityRepositoryProxy implements PostRepositoryInterface
 {
 
     public function __construct(ManagerRegistry $registry)

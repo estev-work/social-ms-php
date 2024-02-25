@@ -3,10 +3,10 @@
 namespace App\Project\Infrastructure\Entity;
 
 
-use App\Project\Infrastructure\Repository\Implementation\DoctrinePostRepository;
+use App\Project\Infrastructure\Repository\PostRepositoryInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: DoctrinePostRepository::class)]
+#[ORM\Entity(repositoryClass: PostRepositoryInterface::class)]
 #[ORM\Table(name: "posts")]
 readonly class PostEntity
 {
