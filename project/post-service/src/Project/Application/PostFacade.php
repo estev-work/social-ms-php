@@ -9,6 +9,9 @@ use App\Project\Application\Commands\PublishPost\PublishPostCommand;
 use App\Project\Application\Commands\PublishPost\PublishPostCommandHandler;
 use App\Project\Application\Commands\UnpublishPost\UnpublishPostCommand;
 use App\Project\Application\Commands\UnpublishPost\UnpublishPostCommandHandler;
+use App\Project\Application\Events\EventBus;
+use App\Project\Application\Events\PostCreationEvent\PostCreationEvent;
+use App\Project\Application\Events\PostCreationEvent\PostCreationEventHandler;
 use App\Project\Application\Queries\GetAllPosts\GetAllPostsQuery;
 use App\Project\Application\Queries\GetAllPosts\GetAllPostsQueryHandler;
 use App\Project\Application\Queries\QueryBus;
@@ -18,23 +21,28 @@ class PostFacade
 {
     private CommandBus $commandBus;
     private QueryBus $queryBus;
+    private EventBus $eventBus;
 
     public function __construct(
         CommandBus $commandBus,
         QueryBus $queryBus,
+        EventBus $eventBus,
         CreateNewPostCommandHandler $createNewPostCommandHandler,
         PublishPostCommandHandler $publishPostCommandHandler,
         UnpublishPostCommandHandler $unpublishPostCommandHandler,
         GetAllPostsQueryHandler $getAllPostsQueryHandler,
+        PostCreationEventHandler $creationEventHandler,
     ) {
         $this->commandBus = $commandBus;
+        $this->eventBus = $eventBus;
         $this->queryBus = $queryBus;
 
         $this->initializeHandlers(
             $createNewPostCommandHandler,
             $publishPostCommandHandler,
             $unpublishPostCommandHandler,
-            $getAllPostsQueryHandler
+            $getAllPostsQueryHandler,
+            $creationEventHandler
         );
     }
 
@@ -43,6 +51,7 @@ class PostFacade
         PublishPostCommandHandler $publishPostCommandHandler,
         UnpublishPostCommandHandler $unpublishPostCommandHandler,
         GetAllPostsQueryHandler $getAllPostsQueryHandler,
+        PostCreationEventHandler $creationEventHandler,
     ): void {
         //Commands
         $this->commandBus->registerHandler(CreateNewPostCommand::class, $createNewPostCommandHandler);
@@ -51,13 +60,19 @@ class PostFacade
 
         //Queries
         $this->queryBus->registerHandler(GetAllPostsQuery::class, $getAllPostsQueryHandler);
+
+        //Queries
+        $this->eventBus->registerHandler(PostCreationEvent::class, $creationEventHandler);
     }
 
     #region Commands
     public function createNewPost(string $title, string $content, string $authorId, $isPublished): PostAggregate
     {
         $command = new CreateNewPostCommand($title, $content, $authorId, $isPublished);
-        return $this->commandBus->handle($command);
+        $post = $this->commandBus->handle($command);
+        $event = new PostCreationEvent($post);
+        $this->eventBus->handle($event);
+        return $post;
     }
 
     public function publishPost(PostAggregate $post): PostAggregate
