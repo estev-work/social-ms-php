@@ -1,0 +1,35 @@
+version: '3.7'
+
+networks:
+  social:
+    driver: bridge
+
+services:
+  user-db:
+    image: mysql:8.0
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${USER_MYSQL_HOST_PORT}:${USER_MYSQL_DOCKER_CONTAINER_PORT}"
+    volumes:
+      - ./volumes/mysql-user:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${USER_MYSQL_DATABASE}
+      MYSQL_USER: ${USER_MYSQL_USER}
+      MYSQL_PASSWORD: ${USER_MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${USER_MYSQL_ROOT_PASSWORD}
+    networks:
+      - social
+
+  user-service:
+    build:
+      context: ../project/user-service
+      dockerfile: Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./rr/rr:/usr/local/bin/rr
+      - ../project/user-service:/var/www
+      - ../project/user-service/.rr.yaml:/etc/roadrunner/.rr.yaml
+    networks:
+      - social

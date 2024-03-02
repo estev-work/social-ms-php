@@ -1,0 +1,35 @@
+version: '3.7'
+
+networks:
+  social:
+    driver: bridge
+
+services:
+  post-db:
+    image: mysql:8.0
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${POST_MYSQL_HOST_PORT}:${POST_MYSQL_DOCKER_CONTAINER_PORT}"
+    volumes:
+      - ./volumes/mysql-post:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${POST_MYSQL_DATABASE}
+      MYSQL_USER: ${POST_MYSQL_USER}
+      MYSQL_PASSWORD: ${POST_MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${POST_MYSQL_ROOT_PASSWORD}
+    networks:
+      - social
+
+  post-service:
+    build:
+      context: ../project/post-service
+      dockerfile: Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./rr/rr:/usr/local/bin/rr
+      - ../project/post-service:/var/www
+      - ../project/post-service/.rr.yaml:/etc/roadrunner/.rr.yaml
+    networks:
+      - social
