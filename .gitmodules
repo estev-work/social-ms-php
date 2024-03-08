@@ -1,6 +1,3 @@
-[submodule "project/post-service"]
-	path = project/post-service
-	url = git@github.com:estev-work/post-service.git
-[submodule "project/user-service"]
-	path = project/user-service
-	url = git@github.com:estev-work/user-service.git
+[submodule "project/app"]
+	path = project/app
+	url = git@github.com:estev-work/app-social.git

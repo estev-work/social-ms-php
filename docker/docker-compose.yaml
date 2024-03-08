@@ -6,6 +6,7 @@ networks:
 
 services:
   nginx-service:
+    restart: always
     image: nginx:1.25.1-alpine3.17
     volumes:
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
